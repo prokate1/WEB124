@@ -1,1 +1,30 @@
+<!--Kate Raney April 3, 2025
+-->
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Chapter 3 Project by Kate Raney" />
+  <title>Chapter 3 Project</title>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Chapter 3 JavaScript Exercise</h1>
+
+    <section>
+      <h2>Questions & Answers</h2>
+      <ol>
+        <li>What is your full name?<br />Kate Raney</li>
+        <li>What is your desired annual salary?<br />$120,000</li>
+        <li>Are you a veteran?<br />No</li>
+        <li>Name three friends:<br />Alex, Jordan, Taylor</li>
+        <li>Desired salaries of friends:<br />$85,000, $95,000, $75,000</li>
+        <li>Another friend’s details:<br />Sam Johnson, $108,000</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>
