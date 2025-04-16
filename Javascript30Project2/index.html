@@ -2,20 +2,70 @@
 <!--Kate Raney  April 15, 2025
 
   What Was New or Challenging:
-    
+    1. Implementing live filtering with JavaScript.
+    2. Understanding event listeners and dynamic HTML rendering.
 
   Modifications/Improvements:
-    1. 
+    1. Added meta viewport tag for mobile responsiveness.
+    2. Included internal CSS for styling without external dependency.
+    3. Improved UX with color contrast and hover effects.
+    4. Documented changes and added numbered comments for learning clarity.
 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/✅" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f5;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .search-form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.25rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .suggestions {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-radius: 0.5rem;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .suggestions li {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+    }
+
+    .suggestions li:last-child {
+      border-bottom: none;
+    }
+
+    .hl {
+      background-color: yellow;
+    }
+  </style>
 </head>
 <body>
-
   <form class="search-form">
     <input type="text" class="search" placeholder="City or State">
     <ul class="suggestions">
@@ -23,48 +73,47 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-const cities = [];
-fetch(endpoint)
-  .then(blob => blob.json())
-  .then(data => cities.push(...data));
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    const cities = [];
 
-function findMatches(wordToMatch, cities) {
-  return cities.filter(place => {
-    // here we need to figure out if the city or state matches what was searched
-    const regex = new RegExp(wordToMatch, 'gi');
-    return place.city.match(regex) || place.state.match(regex)
-  });
-}
+    fetch(endpoint)
+      .then(blob => blob.json())
+      .then(data => cities.push(...data));
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        const regex = new RegExp(wordToMatch, 'gi');
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    }
 
-function displayMatches() {
-  const matchArray = findMatches(this.value, cities);
-  const html = matchArray.map(place => {
-    const regex = new RegExp(this.value, 'gi');
-    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
-    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
-    return `
-      <li>
-        <span class="name">${cityName}, ${stateName}</span>
-        <span class="population">${numberWithCommas(place.population)}</span>
-      </li>
-    `;
-  }).join('');
-  suggestions.innerHTML = html;
-}
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
 
-const searchInput = document.querySelector('.search');
-const suggestions = document.querySelector('.suggestions');
+    function displayMatches() {
+      const matchArray = findMatches(this.value, cities);
+      const html = matchArray.map(place => {
+        const regex = new RegExp(this.value, 'gi');
+        const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+        const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+        return `
+          <li>
+            <span class="name">${cityName}, ${stateName}</span>
+            <span class="population">${numberWithCommas(place.population)}</span>
+          </li>
+        `;
+      }).join('');
+      suggestions.innerHTML = html;
+    }
 
-searchInput.addEventListener('change', displayMatches);
-searchInput.addEventListener('keyup', displayMatches);
+    const searchInput = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
 
-</script>
-  </body>
+    searchInput.addEventListener('change', displayMatches);
+    searchInput.addEventListener('keyup', displayMatches);
+  </script>
+</body>
 </html>
