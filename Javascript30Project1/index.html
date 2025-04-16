@@ -1,27 +1,29 @@
 <!DOCTYPE html>
+<!--Kate Raney -  Clock Project  April 12, 2025
+
+  What Was New or Challenging:
+    1. Understanding how to calculate rotation angles using time data
+    2.  Dealing with the 90-degree offset in CSS transforms
+    3. Ensuring smooth animation using transitions while avoiding the "jump" at 0 seconds
+    4. Customizing the layout and adding visual clarity using box shadows and CSS transforms
+
+  Modifications/Improvements:
+     HTML: Added structural clarity and accessibility considerations
+     CSS: Improved layout alignment, responsiveness, and aesthetic (e.g., centered clock, soft background)
+     JS: Changed for readability and added clear inline comments
+-->
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>JS + CSS Clock</title>
   <link rel="icon" href="https://fav.farm/✅" />
-</head>
-<body>
-
-
-    <div class="clock">
-      <div class="clock-face">
-        <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
-        <div class="hand second-hand"></div>
-      </div>
-    </div>
-
-
   <style>
+    /* Base styling for the entire page */
     html {
       background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
       background-size: cover;
-      font-family: 'helvetica neue';
+      font-family: 'Helvetica Neue', sans-serif;
       text-align: center;
       font-size: 10px;
     }
@@ -33,68 +35,89 @@
       flex: 1;
       min-height: 100vh;
       align-items: center;
+      justify-content: center; /* Center horizontally */
     }
 
+    /* Clock container */
     .clock {
       width: 30rem;
       height: 30rem;
       border: 20px solid white;
       border-radius: 50%;
-      margin: 50px auto;
       position: relative;
       padding: 2rem;
       box-shadow:
         0 0 0 4px rgba(0,0,0,0.1),
-        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 0 3px #efefef,
         inset 0 0 10px black,
         0 0 10px rgba(0,0,0,0.2);
+      background-color: rgba(255, 255, 255, 0.05); /* Slightly visible clock background */
     }
 
+    /* Face of the clock that holds the hands */
     .clock-face {
       position: relative;
       width: 100%;
       height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
+      transform: translateY(-3px); /* Adjust for visual alignment */
     }
 
+    /* General styles for each hand */
     .hand {
       width: 50%;
       height: 6px;
       background: black;
       position: absolute;
       top: 50%;
-      transform-origin: 100%;
-      transform: rotate(90deg);
+      transform-origin: 100%; /* Rotate from one end */
+      transform: rotate(90deg); /* Start pointing at 12 o'clock */
       transition: all 0.05s;
-      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1); /* Smooth movement */
     }
-</style>
+  </style>
+</head>
+<body>
 
-<script>
-  const secondHand = document.querySelector('.second-hand');
-  const minsHand = document.querySelector('.min-hand');
-  const hourHand = document.querySelector('.hour-hand');
+  <!-- Clock Structure -->
+  <div class="clock" role="img" aria-label="Analog clock showing the current time">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+  </div>
 
-  function setDate() {
-    const now = new Date();
+  <script>
+    // Select each clock hand
+    const secondHand = document.querySelector('.second-hand');
+    const minsHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
 
-    const seconds = now.getSeconds();
-    const secondsDegrees = ((seconds / 60) * 360) + 90;
-    secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+    function setDate() {
+      const now = new Date();
 
-    const mins = now.getMinutes();
-    const minsDegrees = ((mins / 60) * 360) + ((seconds/60)*6) + 90;
-    minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+      // Get current seconds, then convert to degrees (with 90 deg offset)
+      const seconds = now.getSeconds();
+      const secondsDegrees = ((seconds / 60) * 360) + 90;
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
 
-    const hour = now.getHours();
-    const hourDegrees = ((hour / 12) * 360) + ((mins/60)*30) + 90;
-    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
-  }
+      // Get current minutes, with additional rotation based on seconds
+      const mins = now.getMinutes();
+      const minsDegrees = ((mins / 60) * 360) + ((seconds / 60) * 6) + 90;
+      minsHand.style.transform = `rotate(${minsDegrees}deg)`;
 
-  setInterval(setDate, 1000);
+      // Get current hours, with additional rotation based on minutes
+      const hour = now.getHours();
+      const hourDegrees = ((hour / 12) * 360) + ((mins / 60) * 30) + 90;
+      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+    }
 
-  setDate();
+    // Run setDate every second to keep time updated
+    setInterval(setDate, 1000);
 
-</script>
+    // Run once at load to prevent initial lag
+    setDate();
+  </script>
+
 </body>
 </html>
