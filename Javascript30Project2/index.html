@@ -2,117 +2,69 @@
 <!--Kate Raney  April 15, 2025
 
   What Was New or Challenging:
-     Understanding the scroll-triggered animations using JavaScript and CSS.
+    
 
   Modifications/Improvements:
-    1. Improved semantic structure and readability.
-    2. Added basic styling and a responsive layout.
-    3. Enhanced scroll-in animation using CSS transitions.
-    4. Documented changes clearly for easier maintenance.
+    1. 
 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scroll-In Animation</title>
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/✅" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0 1rem;
-      background: #f9f9f9;
-      color: #333;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 2.5rem;
-    }
-
-    .site-wrap {
-      max-width: 900px;
-      margin: auto;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 2rem 0;
-    }
-
-    .align-left {
-      float: left;
-      margin-right: 1rem;
-    }
-
-    .align-right {
-      float: right;
-      margin-left: 1rem;
-    }
-
-    .slide-in {
-      opacity: 0;
-      transform: translateX(100px);
-      transition: all 0.6s ease-out;
-    }
-
-    .slide-in.active {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    @media (max-width: 600px) {
-      .align-left, .align-right {
-        float: none;
-        margin: 1rem 0;
-      }
-    }
-  </style>
 </head>
 <body>
-  <div class="site-wrap">
-    <h1>Scroll-in on Scroll</h1>
-    <!-- Content left as is for demo purposes -->
-    <!-- Images below will trigger animation on scroll -->
-    <!-- 
-      CHANGES MADE:
-      1. CSS added for layout, responsive design, and transitions
-      2. Media query added for mobile-friendliness
-      3. Added meta viewport tag
-      4. Added comments to HTML for clarity
-    -->
-    <!-- JavaScript added at end of body -->
-  </div>
 
-  <script>
-    const sliders = document.querySelectorAll('.slide-in');
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-    const appearOptions = {
-      threshold: 0,
-      rootMargin: '0px 0px -100px 0px'
-    };
+const cities = [];
+fetch(endpoint)
+  .then(blob => blob.json())
+  .then(data => cities.push(...data));
 
-    const appearOnScroll = new IntersectionObserver(function(
-      entries,
-      appearOnScroll
-    ) {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) {
-          return;
-        } else {
-          entry.target.classList.add('active');
-          appearOnScroll.unobserve(entry.target);
-        }
-      });
-    }, appearOptions);
+function findMatches(wordToMatch, cities) {
+  return cities.filter(place => {
+    // here we need to figure out if the city or state matches what was searched
+    const regex = new RegExp(wordToMatch, 'gi');
+    return place.city.match(regex) || place.state.match(regex)
+  });
+}
 
-    sliders.forEach(slider => {
-      appearOnScroll.observe(slider);
-    });
-  </script>
-</body>
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function displayMatches() {
+  const matchArray = findMatches(this.value, cities);
+  const html = matchArray.map(place => {
+    const regex = new RegExp(this.value, 'gi');
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
+      </li>
+    `;
+  }).join('');
+  suggestions.innerHTML = html;
+}
+
+const searchInput = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
+
+searchInput.addEventListener('change', displayMatches);
+searchInput.addEventListener('keyup', displayMatches);
+
+</script>
+  </body>
 </html>
