@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!-- Kate Raney  May 04, 2025 JavaScript Calculator Final -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Calculator</title>
+  <style>
+    :root {
+      --primary-color: #4a90e2;
+      --background-color: #f0f4f8;
+      --card-color: #ffffff;
+      --font-color: #333;
+      --border-radius: 8px;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--background-color);
+      font-family: var(--font-family);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+      min-height: 100vh;
+      color: var(--font-color);
+    }
+
+    .calculator {
+      background-color: var(--card-color);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 1.5rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: #fff;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    .results p {
+      background: #eef4fa;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--primary-color);
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 600px) {
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>JavaScript Calculator</h1>
+
+    <label for="num">Enter a number:</label>
+    <input type="number" id="num" placeholder="e.g., 5">
+
+    <div class="button-group">
+      <button id="calculate">Calculate!</button>
+      <button id="clear">Clear</button>
+    </div>
+
+    <div class="results">
+      <p id="addition">Addition</p>
+      <p id="subtraction">Subtraction</p>
+      <p id="multiplication">Multiplication</p>
+      <p id="division">Division</p>
+    </div>
+  </div>
+
+  <script>
+    function additionFunc(num) {
+      let result = '';
+      for (let i = 1; i <= 10; i++) {
+        result += `${num} + ${i} = ${num + i}\n`;
+      }
+      document.getElementById('addition').textContent = result;
+    }
+
+    function subtractionFunc(num) {
+      let result = '';
+      let i = 1;
+      while (i <= 10) {
+        result += `${num} - ${i} = ${num - i}\n`;
+        i++;
+      }
+      document.getElementById('subtraction').textContent = result;
+    }
+
+    function multiplicationFunc(num) {
+      let result = '';
+      let i = 1;
+      do {
+        result += `${num} * ${i} = ${num * i}\n`;
+        i++;
+      } while (i <= 10);
+      document.getElementById('multiplication').textContent = result;
+    }
+
+    function divisionFunc(num) {
+      let result = '';
+      for (let i = 1; i <= 10; i++) {
+        result += `${num} / ${i} = ${(num / i).toFixed(2)}\n`;
+      }
+      document.getElementById('division').textContent = result;
+    }
+
+    function calculateAll() {
+      const num = parseFloat(document.getElementById('num').value);
+      if (isNaN(num)) {
+        alert('Please enter a valid number.');
+        return;
+      }
+      additionFunc(num);
+      subtractionFunc(num);
+      multiplicationFunc(num);
+      divisionFunc(num);
+    }
+
+    function clearResults() {
+      document.getElementById('num').value = '';
+      document.getElementById('addition').textContent = 'Addition';
+      document.getElementById('subtraction').textContent = 'Subtraction';
+      document.getElementById('multiplication').textContent = 'Multiplication';
+      document.getElementById('division').textContent = 'Division';
+    }
+
+    document.getElementById('calculate').addEventListener('click', calculateAll);
+    document.getElementById('clear').addEventListener('click', clearResults);
+  </script>
+</body>
+</html>
